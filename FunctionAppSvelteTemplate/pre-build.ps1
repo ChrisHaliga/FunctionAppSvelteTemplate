@@ -1,7 +1,10 @@
 ﻿Write-Host "Pre-build started..."
 $startTime = Get-Date
 
-npm --prefix .\Frontend run build | Out-Null
+cd ./Frontend
+npm run build | Out-Null
+npm i -g | Out-Null
+cd ../
 
 $endTime = Get-Date
 $timeDif = ($endTime - $startTime)

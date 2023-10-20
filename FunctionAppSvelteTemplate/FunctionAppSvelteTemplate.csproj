@@ -4,7 +4,7 @@
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
   </PropertyGroup>
   <ItemGroup>
-	  <None Update="Frontend\dis\**\*.*">
+	  <None Update="Frontend\dist\**\*.*">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>	
   </ItemGroup>
