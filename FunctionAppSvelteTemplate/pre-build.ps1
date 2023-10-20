@@ -3,8 +3,8 @@ $startTime = Get-Date
 
 dotnet clean
 cd ./Frontend
-npm run build | Out-Null
 npm i -g | Out-Null
+npm run build | Out-Null
 cd ../
 
 $endTime = Get-Date
