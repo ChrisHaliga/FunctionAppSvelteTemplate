@@ -7,6 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Net.Mime;
 
 namespace FunctionAppSvelteTemplate
 {
@@ -45,15 +46,7 @@ namespace FunctionAppSvelteTemplate
             if (File.Exists(filePath))
             {
                 string fileContent = File.ReadAllText(filePath);
-                string contentType = "application/octet-stream";
-
-                if(asset.EndsWith(".css"))
-                    contentType = "text/css";
-                else if (asset.EndsWith(".js"))
-                    contentType = "application/javascript";
-                else if (asset.EndsWith(".html"))
-                    contentType = "text/html";
-
+                string contentType = GetContentType(asset);
 
                 return new ContentResult
                 {
@@ -78,14 +71,6 @@ namespace FunctionAppSvelteTemplate
                 byte[] imageBytes = File.ReadAllBytes(filePath);
                 string contentType = GetContentType(asset);
 
-                if (asset.EndsWith(".css"))
-                    contentType = "text/css";
-                else if (asset.EndsWith(".js"))
-                    contentType = "application/javascript";
-                else if (asset.EndsWith(".html"))
-                    contentType = "text/html";
-
-
                 return new FileContentResult(imageBytes, contentType);
             }
             else
@@ -97,6 +82,12 @@ namespace FunctionAppSvelteTemplate
             string extension = Path.GetExtension(filePath).ToLowerInvariant();
             switch (extension)
             {
+                case ".css":
+                    return "text/css";
+                case ".js":
+                    return "application/javascript";
+                case ".html":
+                    return "text/html";
                 case ".jpg":
                 case ".jpeg":
                     return "image/jpeg";

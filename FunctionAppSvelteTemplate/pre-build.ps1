@@ -1,6 +1,7 @@
 ﻿Write-Host "Pre-build started..."
 $startTime = Get-Date
 
+dotnet clean
 cd ./Frontend
 npm run build | Out-Null
 npm i -g | Out-Null
