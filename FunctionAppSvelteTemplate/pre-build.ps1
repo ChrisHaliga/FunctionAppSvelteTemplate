@@ -9,7 +9,7 @@ $appsettingsFileContent = Get-Content -Path $appsettingsFilePath
 $appsettingsFileContent = $appsettingsFileContent -replace '"builts*:\s*false', '"built": true'
 Set-Content -Path $appsettingsFilePath -Value $appsettingsFileContent
 
-npm i -g | Out-Null
+npm i | Out-Null
 npm run build | Out-Null
 
 $appsettingsFileContent = $appsettingsFileContent -replace '"builts*:\s*true', '"built": false'
