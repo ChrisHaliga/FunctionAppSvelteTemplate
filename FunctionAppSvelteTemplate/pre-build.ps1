@@ -1,10 +1,20 @@
 ﻿Write-Host "Pre-build started..."
 $startTime = Get-Date
 
-dotnet clean
 cd ./Frontend
+
+$appsettingsFilePath = ".\Appsettings.ts"
+
+$appsettingsFileContent = Get-Content -Path $appsettingsFilePath
+$appsettingsFileContent = $appsettingsFileContent -replace '"builts*:\s*false', '"built": true'
+Set-Content -Path $appsettingsFilePath -Value $appsettingsFileContent
+
 npm i -g | Out-Null
 npm run build | Out-Null
+
+$appsettingsFileContent = $appsettingsFileContent -replace '"builts*:\s*true', '"built": false'
+Set-Content -Path $appsettingsFilePath -Value $appsettingsFileContent
+
 cd ../
 
 $endTime = Get-Date

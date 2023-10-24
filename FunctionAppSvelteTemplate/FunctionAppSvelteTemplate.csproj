@@ -4,11 +4,6 @@
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
   </PropertyGroup>
   <ItemGroup>
-	  <None Update="Frontend\dist\**\*.*">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>	
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.1.1" />
@@ -27,5 +22,8 @@
   </ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="powershell.exe -File &quot;$(ProjectDir)pre-build.ps1&quot;" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="powershell.exe -File $(ProjectDir)post-build.ps1 ..\$(OutDir)" />
   </Target>
 </Project>

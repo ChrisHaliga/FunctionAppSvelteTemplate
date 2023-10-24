@@ -2,6 +2,12 @@
   import svelteLogo from './assets/svelte.svg'
   import viteLogo from '/vite.svg'
   import Counter from './lib/Counter.svelte'
+  import { Appsettings } from '../Appsettings'
+  
+  if(Appsettings.Built)
+  {
+     //Logic for when built by the function app
+  }
 </script>
 
 <main>

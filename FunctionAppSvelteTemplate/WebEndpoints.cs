@@ -1,24 +1,25 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System.Net.Mime;
+using System.IO;
 
 namespace FunctionAppSvelteTemplate
 {
-    public static class WebEndpoints
+    public  class WebEndpoints
     {
-        [FunctionName(nameof(Index))]
-        public static IActionResult Index(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "index.html")] HttpRequest req,
-            ILogger log)
+        private readonly string _rootFolder;
+        private readonly ILogger _logger;
+        public WebEndpoints(string rootFolder)
         {
-            string filePath = "./Frontend/dist/index.html";
+            _rootFolder = rootFolder;
+        }
+
+        [FunctionName(nameof(Index))]
+        public IActionResult Index([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "index.html")] HttpRequest req)
+        {
+            string filePath = $"{_rootFolder}/Frontend/index.html";
 
             if (File.Exists(filePath))
             {
@@ -37,11 +38,9 @@ namespace FunctionAppSvelteTemplate
         }
 
         [FunctionName(nameof(Assets))]
-        public static IActionResult Assets(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "assets/{*asset}")] HttpRequest req, string asset,
-            ILogger log)
+        public IActionResult Assets([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "assets/{*asset}")] HttpRequest req, string asset)
         {
-            string filePath = $"./Frontend/dist/assets/{asset}";
+            string filePath = $"{_rootFolder}/Frontend/assets/{asset}";
 
             if (File.Exists(filePath))
             {
@@ -60,11 +59,9 @@ namespace FunctionAppSvelteTemplate
         }
 
         [FunctionName(nameof(PublicAssets))]
-        public static IActionResult PublicAssets(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "{*asset}")] HttpRequest req, string asset,
-            ILogger log)
+        public IActionResult PublicAssets([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "{*asset}")] HttpRequest req, string asset)
         {
-            string filePath = $"./Frontend/dist/{asset}";
+            string filePath = $"{_rootFolder}/Frontend/{asset}";
 
             if (File.Exists(filePath))
             {
@@ -88,6 +85,10 @@ namespace FunctionAppSvelteTemplate
                     return "application/javascript";
                 case ".html":
                     return "text/html";
+                case ".json":
+                    return "application/json";
+                case ".csv":
+                    return "text/csv";
                 case ".jpg":
                 case ".jpeg":
                     return "image/jpeg";
