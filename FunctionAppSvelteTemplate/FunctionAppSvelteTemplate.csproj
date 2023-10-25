@@ -24,6 +24,6 @@
     <Exec Command="powershell.exe -File &quot;$(ProjectDir)pre-build.ps1&quot;" />
   </Target>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="powershell.exe -File $(ProjectDir)post-build.ps1 ..\$(OutDir)" />
+    <Exec Command="powershell.exe -File &quot;$(ProjectDir)post-build.ps1&quot; ..\$(OutDir)" />
   </Target>
 </Project>
