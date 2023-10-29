@@ -16,59 +16,22 @@ namespace FunctionAppSvelteTemplate
             _rootFolder = rootFolder;
         }
 
-        [FunctionName(nameof(Index))]
-        public IActionResult Index([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "index.html")] HttpRequest req)
-        {
-            string filePath = $"{_rootFolder}/Frontend/index.html";
-
-            if (File.Exists(filePath))
-            {
-                string fileContent = File.ReadAllText(filePath);
-                string contentType = "text/html";
-
-                return new ContentResult
-                {
-                    Content = fileContent,
-                    ContentType = contentType,
-                    StatusCode = 200
-                };
-            }
-            else
-                return new NotFoundResult();
-        }
-
-        [FunctionName(nameof(Assets))]
-        public IActionResult Assets([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "assets/{*asset}")] HttpRequest req, string asset)
-        {
-            string filePath = $"{_rootFolder}/Frontend/assets/{asset}";
-
-            if (File.Exists(filePath))
-            {
-                string fileContent = File.ReadAllText(filePath);
-                string contentType = GetContentType(asset);
-
-                return new ContentResult
-                {
-                    Content = fileContent,
-                    ContentType = contentType,
-                    StatusCode = 200
-                };
-            }
-            else
-                return new NotFoundResult();
-        }
-
-        [FunctionName(nameof(PublicAssets))]
-        public IActionResult PublicAssets([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "{*asset}")] HttpRequest req, string asset)
+        [FunctionName(nameof(Web))]
+        public IActionResult Web([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "web/{*asset}")] HttpRequest req, string asset)
         {
             string filePath = $"{_rootFolder}/Frontend/{asset}";
 
             if (File.Exists(filePath))
             {
-                byte[] imageBytes = File.ReadAllBytes(filePath);
+                string fileContent = File.ReadAllText(filePath);
                 string contentType = GetContentType(asset);
 
-                return new FileContentResult(imageBytes, contentType);
+                return new ContentResult
+                {
+                    Content = fileContent,
+                    ContentType = contentType,
+                    StatusCode = 200
+                };
             }
             else
                 return new NotFoundResult();
