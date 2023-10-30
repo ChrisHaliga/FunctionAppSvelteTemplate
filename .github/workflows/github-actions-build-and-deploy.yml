@@ -25,9 +25,8 @@ jobs:
           node-version: '16.x'
       
       - name: npm install
-        run: |
-          cd Frontend
-          npm install
+        working-directory: ./FunctionAppSvelteTemplate/Frontend
+        run: npm install
       
       - name: .Net Build
         run: dotnet build **/*.csproj --configuration Release
