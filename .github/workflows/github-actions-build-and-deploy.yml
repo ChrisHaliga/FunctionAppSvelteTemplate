@@ -1,0 +1,70 @@
+name: CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  build:
+    name: Continuous Integration
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Use .Net
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.x'
+      
+      - name: Install Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+      
+      - name: npm install
+        run: |
+          cd Frontend
+          npm install
+      
+      - name: .Net Build
+        run: dotnet build **/*.csproj --configuration Release
+
+      - name: .Net Publish
+        run: dotnet publish **/*.csproj -c Release -o ./artifacts
+      
+      - name: Unzip Artifact
+        run: Expand-Archive -Path ./artifacts/s.zip -DestinationPath ./artifacts/s
+
+      - name: Copy Files into Unzipped Artifact
+        run: |
+          New-Item -ItemType Directory -Path ./artifacts/s/Frontend -Force
+          Copy-Item -Path "./artifacts/Frontend/*" -Destination ./artifacts/s/Frontend -Recurse -Force
+
+      - name: Re-zip Artifact
+        run: Compress-Archive -Path ./artifacts/s/* -DestinationPath ./artifacts/s.zip -Force
+
+  deploy:
+    name: Continuous Deployment
+    needs: build
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+    runs-on: windows-latest
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure Function App
+        uses: Azure/functions-action@v1
+        with:
+          app-name: '<Your-Function-App-Name>'
+          package: './artifacts/s.zip'
+
+      - name: Publish Artifact - FunctionTrigger
+        uses: actions/upload-artifact@v2
+        with:
+          name: FunctionTrigger
+          path: ./artifacts/s.zip
