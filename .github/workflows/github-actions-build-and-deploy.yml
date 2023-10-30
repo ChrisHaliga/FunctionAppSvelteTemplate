@@ -29,20 +29,25 @@ jobs:
         run: npm install
       
       - name: .Net Build
+        working-directory: ./FunctionAppSvelteTemplate
         run: dotnet build **/*.csproj --configuration Release
 
       - name: .Net Publish
+        working-directory: ./FunctionAppSvelteTemplate
         run: dotnet publish **/*.csproj -c Release -o ./artifacts
       
       - name: Unzip Artifact
+        working-directory: ./FunctionAppSvelteTemplate
         run: Expand-Archive -Path ./artifacts/s.zip -DestinationPath ./artifacts/s
 
       - name: Copy Files into Unzipped Artifact
+        working-directory: ./FunctionAppSvelteTemplate
         run: |
           New-Item -ItemType Directory -Path ./artifacts/s/Frontend -Force
           Copy-Item -Path "./artifacts/Frontend/*" -Destination ./artifacts/s/Frontend -Recurse -Force
 
       - name: Re-zip Artifact
+        working-directory: ./FunctionAppSvelteTemplate
         run: Compress-Archive -Path ./artifacts/s/* -DestinationPath ./artifacts/s.zip -Force
 
   deploy:
