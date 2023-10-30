@@ -1,4 +1,4 @@
-name: CI/CD Workflow
+name: CI/CD Workflow for .NET Function App with Svelte Frontend
 
 on:
   push:
@@ -8,66 +8,70 @@ on:
 
 jobs:
   build:
-    name: Continuous Integration
+    name: Build
     runs-on: windows-latest
     steps:
-      - name: Checkout repository
+      # Checkout the codebase
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Use .Net
+      # Setup .NET SDK
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '6.x'
-      
-      - name: Install Node
+
+      # Setup Node.js for frontend
+      - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '16.x'
-      
-      - name: npm install
+
+      # Install frontend dependencies
+      - name: Install Frontend Dependencies
         working-directory: ./FunctionAppSvelteTemplate/Frontend
         run: npm install
-      
-      - name: .Net Build
+
+      # Build the .NET project
+      - name: Build .NET Project
         working-directory: ./FunctionAppSvelteTemplate
         run: dotnet build **/*.csproj --configuration Release
 
-      - name: .Net Publish
+      # Publish the .NET project
+      - name: Publish .NET Project
         working-directory: ./FunctionAppSvelteTemplate
         run: dotnet publish **/*.csproj -c Release -o ./artifacts
-      
-      - name: Unzip Artifact
-        working-directory: ./FunctionAppSvelteTemplate
-        run: Expand-Archive -Path ./artifacts/s.zip -DestinationPath ./artifacts/s
 
-      - name: Copy Files into Unzipped Artifact
+      # Process the artifact for deployment
+      - name: Prepare Artifact for Deployment
         working-directory: ./FunctionAppSvelteTemplate
         run: |
+          Expand-Archive -Path ./artifacts/s.zip -DestinationPath ./artifacts/s
           New-Item -ItemType Directory -Path ./artifacts/s/Frontend -Force
           Copy-Item -Path "./artifacts/Frontend/*" -Destination ./artifacts/s/Frontend -Recurse -Force
-
-      - name: Re-zip Artifact
-        working-directory: ./FunctionAppSvelteTemplate
-        run: Compress-Archive -Path ./artifacts/s/* -DestinationPath ./artifacts/s.zip -Force
+          Compress-Archive -Path ./artifacts/s/* -DestinationPath ./artifacts/s.zip -Force
 
   deploy:
-    name: Continuous Deployment
+    name: Deploy
     needs: build
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     runs-on: windows-latest
     steps:
-      - name: Login to Azure
+      # Login to Azure
+      - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure Function App
+      # Deploy to Azure Function App
+      - name: Deploy to Azure
         uses: Azure/functions-action@v1
         with:
           app-name: '<Your-Function-App-Name>'
           package: './artifacts/s.zip'
 
-      - name: Publish Artifact - FunctionTrigger
+      # Publish the artifact for record-keeping or further use
+      - name: Archive Deployment Artifact
         uses: actions/upload-artifact@v2
         with:
           name: FunctionTrigger
