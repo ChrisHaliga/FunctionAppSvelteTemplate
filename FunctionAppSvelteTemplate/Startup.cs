@@ -9,6 +9,12 @@ namespace FunctionAppSvelteTemplate
 {
     public class Startup : FunctionsStartup
     {
+        private IConfiguration _configuration;
+
+        private string GetAppSetting(string name)
+        {
+            return _configuration[name] ?? _configuration[$"Values:{name}"];
+        }
         public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
         {
             var env = builder.GetContext();
@@ -21,7 +27,9 @@ namespace FunctionAppSvelteTemplate
         }
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            var rootFolder = builder.GetContext().Configuration["Values:RootFolder"];
+            _configuration = builder.GetContext().Configuration;
+
+            var rootFolder = GetAppSetting("RootFolder");
             builder.Services.AddSingleton(rootFolder);
         }
 

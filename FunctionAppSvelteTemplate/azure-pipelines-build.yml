@@ -21,6 +21,7 @@ steps:
 
 - script: |
     cd Frontend
+    npm cache clean --force
     npm install
   displayName: 'npm install'
 
@@ -53,7 +54,7 @@ steps:
       New-Item -ItemType Directory -Path ${env:BUILD_ARTIFACTSTAGINGDIRECTORY}\..\a\s\Frontend -Force | Out-Null
       Copy-Item -Path "${env:BUILD_ARTIFACTSTAGINGDIRECTORY}\Frontend\*" -Destination ${env:BUILD_ARTIFACTSTAGINGDIRECTORY}\..\a\s\Frontend -Recurse -Force
 
-- task: PublishBuildArtifact@1
+- task: ArchiveFiles@2
   displayName: 'Re-zip Artifact'
   inputs:
     rootFolderOrFile: 'D:\a\1\a\s'  
