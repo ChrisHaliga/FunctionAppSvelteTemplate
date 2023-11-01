@@ -21,7 +21,6 @@
     <Folder Include="Frontend\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".automations\arm.json" />
     <None Include=".automations\azure-pipelines-build.yml" />
     <None Include=".automations\deploy.ps1" />
     <None Include=".automations\deployAzureResources.bicep" />
