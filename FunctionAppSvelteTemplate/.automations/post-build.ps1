@@ -1,6 +1,8 @@
 ﻿param(
 	[string] $OutDir
 )
+Write-Host "Post-build started..."
+$startTime = Get-Date
 
 if($env:BUILD_ARTIFACTSTAGINGDIRECTORY -ne $null){
 	$OutDir = $env:BUILD_ARTIFACTSTAGINGDIRECTORY + "\"
@@ -8,9 +10,6 @@ if($env:BUILD_ARTIFACTSTAGINGDIRECTORY -ne $null){
 }
 
 $frontendFolder = $OutDir + "Frontend"
-
-Write-Host "Post-build started..."
-$startTime = Get-Date
 
 cd ./Frontend
 

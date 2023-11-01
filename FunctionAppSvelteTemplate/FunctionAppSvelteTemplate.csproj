@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
@@ -20,10 +20,18 @@
   <ItemGroup>
     <Folder Include="Frontend\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include=".automations\arm.json" />
+    <None Include=".automations\azure-pipelines-build.yml" />
+    <None Include=".automations\deploy.ps1" />
+    <None Include=".automations\deployAzureResources.bicep" />
+    <None Include=".automations\post-build.ps1" />
+    <None Include=".automations\pre-build.ps1" />
+  </ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="powershell.exe -File &quot;$(ProjectDir)pre-build.ps1&quot;" />
+    <Exec Command="powershell.exe -File &quot;$(ProjectDir).automations\pre-build.ps1&quot;" />
   </Target>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="powershell.exe -File &quot;$(ProjectDir)post-build.ps1&quot; ..\$(OutDir)" />
+    <Exec Command="powershell.exe -File &quot;$(ProjectDir).automations\post-build.ps1&quot; ..\$(OutDir)" />
   </Target>
 </Project>
