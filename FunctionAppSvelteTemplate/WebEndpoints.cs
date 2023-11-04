@@ -20,21 +20,16 @@ namespace FunctionAppSvelteTemplate
         public IActionResult Web([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "web/{*asset}")] HttpRequest req, string asset)
         {
             if (string.IsNullOrEmpty(asset))
-                asset = "index.html";
+                return new RedirectResult("~/web/index.html", true);
 
             string filePath = $"{_rootFolder}/Frontend/{asset}";
 
             if (File.Exists(filePath))
             {
-                string fileContent = File.ReadAllText(filePath);
+                var fileContent = File.ReadAllBytes(filePath);
                 string contentType = GetContentType(asset);
 
-                return new ContentResult
-                {
-                    Content = fileContent,
-                    ContentType = contentType,
-                    StatusCode = 200
-                };
+                return new FileContentResult(fileContent, contentType);
             }
             else
                 return new NotFoundResult();
