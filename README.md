@@ -13,13 +13,13 @@ Running "npm run dev" will allow you to use hot reloading in development, but ke
 
 ## How the Build Process Works
 ![BuildProcess drawio](https://github.com/ChrisHaliga/FunctionAppSvelteTemplate/assets/22923487/fd96396c-3246-4f02-9904-8d4b38c47099)
-1. Developer initiates .NET Build process
-2. pre-build.ps1 is started
-   2a. Frontend's Appsetings.ts has built set to true
-   2b. `npm run build` is started
-       2bi. Svelte is compiled into dist folder
-3. Normal .NET Build runs
-   3a. bin folder is generated
-5. post-build.ps1 is started
-   4a. dist folder is copied from Frontend
-   4b. dist folder is pasted into bin folder
+1. Developer initiates .NET Build process  
+2. pre-build.ps1 is started  
+   2a. Frontend's Appsetings.ts has built set to true  
+   2b. `npm run build` is started  
+       2bi. Svelte is compiled into dist folder  
+3. Normal .NET Build runs  
+   3a. bin folder is generated  
+5. post-build.ps1 is started  
+   4a. dist folder is copied from Frontend  
+   4b. dist folder is pasted into bin folder  
