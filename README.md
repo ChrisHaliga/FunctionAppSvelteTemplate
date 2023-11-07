@@ -12,7 +12,7 @@ Running "npm run dev" will allow you to use hot reloading in development, but ke
 
 ## How the Build Process Works
 ![BuildProcess drawio](https://github.com/ChrisHaliga/FunctionAppSvelteTemplate/assets/22923487/fd96396c-3246-4f02-9904-8d4b38c47099)
-1. User initiates .NET Build process
+1. Developer initiates .NET Build process
 2. pre-build.ps1 is started
    2a. Frontend's Appsetings.ts has built set to true
    2b. `npm run build` is started
