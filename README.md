@@ -5,7 +5,9 @@ Function App with dependency injection that builds and hosts svelte code through
 
 ## Suggestions for Working in the Frontend
 *I use Visual Studio and the extension, [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode)*
+
 *When I work on this project, I open the frontend folder in visual studio and treat it as if it was a standalone Svelte project*
+
 
 Running "npm run dev" will allow you to use hot reloading in development, but keep in mind that the Svelte files will not be tracked directly and if you want the function app to reflect your changes, you will need a manual rebuild before serving it.
 
